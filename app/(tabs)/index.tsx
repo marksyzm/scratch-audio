@@ -7,14 +7,18 @@ import { ThemedText } from "@/components/themed-text"
 import { ThemedView } from "@/components/themed-view"
 import { Link } from "expo-router"
 import { useCallback, useRef, useState } from "react"
-import { AudioContext, AudioRecorder } from "react-native-audio-api"
+import {
+  AudioContext,
+  AudioManager,
+  AudioRecorder,
+} from "react-native-audio-api"
 
 export default function HomeScreen() {
   const [microphoneOn, setMicrophoneOn] = useState(false)
   const recorderRef = useRef<AudioRecorder | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
 
-  const toggleMicrophone = useCallback(() => {
+  const toggleMicrophone = useCallback(async () => {
     alert(`Microphone turned ${!microphoneOn ? "on" : "off"}`)
     setMicrophoneOn((prev) => !prev)
 
@@ -27,7 +31,13 @@ export default function HomeScreen() {
         inputChannelCount: number
       ) => {
         "worklet"
-        console.log(audioData[1].length)
+        console.log(audioData[0].length)
+      }
+
+      if (!(await AudioManager.requestRecordingPermissions())) {
+        const msg = "Microphone permission is required to use this feature."
+        alert(msg)
+        throw new Error(msg)
       }
 
       const recorder = new AudioRecorder({
@@ -74,7 +84,10 @@ export default function HomeScreen() {
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
-      <Button title="Press me" onPress={toggleMicrophone} />
+      <Button
+        title={microphoneOn ? "Microphone On" : "Microphone Off"}
+        onPress={toggleMicrophone}
+      />
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
