@@ -19,16 +19,22 @@ export default function HomeScreen() {
   const audioContextRef = useRef<AudioContext | null>(null)
 
   const toggleMicrophone = useCallback(async () => {
-    alert(`Microphone turned ${!microphoneOn ? "on" : "off"}`)
+    console.log(`Microphone turned ${!microphoneOn ? "on" : "off"}`)
     setMicrophoneOn((prev) => !prev)
 
     if (!microphoneOn) {
       const bufferSize = 1024
       const sampleRate = 48000
 
+      AudioManager.setAudioSessionOptions({
+        iosCategory: "playAndRecord",
+        iosMode: "measurement",
+        iosOptions: ["mixWithOthers"],
+      })
+
       const worklet = (
         audioData: Float32Array[],
-        inputChannelCount: number
+        inputChannelCount: number,
       ) => {
         "worklet"
         console.log(audioData[0].length)
@@ -40,10 +46,7 @@ export default function HomeScreen() {
         throw new Error(msg)
       }
 
-      const recorder = new AudioRecorder({
-        sampleRate,
-        bufferLengthInSamples: bufferSize,
-      })
+      const recorder = new AudioRecorder()
       const audioContext = new AudioContext({ sampleRate })
 
       recorderRef.current = recorder
@@ -53,7 +56,7 @@ export default function HomeScreen() {
         worklet,
         bufferSize,
         1,
-        "UIRuntime"
+        "UIRuntime",
       )
       const adapterNode = audioContext.createRecorderAdapter()
 
