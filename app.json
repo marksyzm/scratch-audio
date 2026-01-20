@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "fortune",
-    "slug": "fortune",
+    "name": "fortunescratch",
+    "slug": "fortunescratch",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "fortune",
+    "scheme": "fortunescratch",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.fortune"
+      "bundleIdentifier": "com.anonymous.fortunescratch"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +21,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.fortune"
+      "package": "com.anonymous.fortunescratch"
     },
     "web": {
       "output": "static",
