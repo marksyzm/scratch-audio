@@ -37,7 +37,7 @@ export default function HomeScreen() {
         inputChannelCount: number,
       ) => {
         "worklet"
-        console.log(audioData[0].length)
+        console.log(audioData[0])
       }
 
       if (!(await AudioManager.requestRecordingPermissions())) {
@@ -63,11 +63,12 @@ export default function HomeScreen() {
       adapterNode.connect(workletNode)
       workletNode.connect(audioContext.destination)
       recorder.connect(adapterNode)
-
       recorder.start()
+      audioContext.resume()
     } else {
       recorderRef.current?.stop()
       recorderRef.current = null
+      audioContextRef.current?.suspend()
       audioContextRef.current?.close()
       audioContextRef.current = null
     }
