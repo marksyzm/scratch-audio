@@ -32,10 +32,7 @@ export default function HomeScreen() {
         iosOptions: ["mixWithOthers"],
       })
 
-      const worklet = (
-        audioData: Float32Array[],
-        inputChannelCount: number,
-      ) => {
+      const worklet = (audioData: Float32Array[]) => {
         "worklet"
         console.log(audioData[0])
       }
@@ -44,6 +41,13 @@ export default function HomeScreen() {
         const msg = "Microphone permission is required to use this feature."
         alert(msg)
         throw new Error(msg)
+      }
+
+      const success = await AudioManager.setAudioSessionActivity(true)
+
+      if (!success) {
+        // console.warn("Could not activate the audio session")
+        throw new Error("Could not activate the audio session")
       }
 
       const recorder = new AudioRecorder()
@@ -71,6 +75,7 @@ export default function HomeScreen() {
       audioContextRef.current?.suspend()
       audioContextRef.current?.close()
       audioContextRef.current = null
+      await AudioManager.setAudioSessionActivity(false)
     }
   }, [microphoneOn])
 
